@@ -12,6 +12,10 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { useParams, useRouter } from "next/navigation";
+import { AlertModal } from "@/components/modals/alert-modal";
 
 interface SettingsFormProps {
   initialData: Store;
@@ -28,6 +32,9 @@ type SettingsFormValues = z.infer<typeof formSchema>;
 export const SettingsForm: React.FC<SettingsFormProps> = ({
   initialData
 }) => {
+  const params = useParams();
+  const router = useRouter();
+
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -37,20 +44,52 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
   });
 
   const onSubmit = async (data: SettingsFormValues) => {
-    console.log(data);
+    try {
+      setLoading(true);
+      await axios.patch(`/api/stores/${params.storeId}`, data );
+      router.refresh();
+      toast.success("Loja atualizada.")
+    } catch ( error ) {
+      toast.error("Ocorreu um erro");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const onDelete = async () => {
+    try {
+      setLoading(true);
+      await axios.delete(`/api/stores/${params.storeId}`)
+      router.refresh();
+      router.push("/");
+      toast.success("Loja deletada");
+
+    } catch ( error ) {
+      toast.error("Confira se você removeu todos os produtos e categorias.");
+    } finally {
+      setLoading(false);
+      setOpen(false);
+    }
   }
 
   return (
     <>
+    <AlertModal
+      isOpen={open}
+      onClose={() => setOpen(false)}
+      onConfirm={onDelete}
+      loading={loading}
+    />
       <div className="flex items-center justify-between">
         <Heading
           title="Configurações"
           description="Gerenciar loja"
         />
         <Button
+          disabled={loading}
           variant="destructive"
           size="sm"
-          onClick={() => {}}
+          onClick={() => setOpen(true)}
         >
           <Trash className="h-4 w-4"/>
         </Button>
