@@ -1,21 +1,23 @@
 "use client";
 
 import * as z from "zod";
+import axios from "axios";
+import toast from "react-hot-toast";
 import { Store } from "@prisma/client";
 import { Trash } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useOrigin } from "@/hooks/use-origin";
 
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import toast from "react-hot-toast";
-import axios from "axios";
-import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-modal";
+import { ApiAlert } from "@/components/ui/api-alert";
 
 interface SettingsFormProps {
   initialData: Store;
@@ -34,6 +36,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
 }) => {
   const params = useParams();
   const router = useRouter();
+  const origin = useOrigin();
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -117,6 +120,11 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
           </Button>
         </form>
       </Form>
+      <Separator />
+      <ApiAlert 
+        title="NEXT_PUBLIC_API_URL" 
+        description={`${origin}/api/${params.storeId}`} 
+        variant="public"/>
     </>
   )
 }
