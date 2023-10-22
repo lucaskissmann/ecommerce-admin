@@ -20,11 +20,11 @@ import { AlertModal } from "@/components/modals/alert-modal";
 import { ApiAlert } from "@/components/ui/api-alert";
 import ImageUpload from "@/components/ui/image-upload";
 
-const customErrorMessage = "O nome deve conter ao menos 1 caractere.";
+const customErrorMessage = "O nome deve conter ao menos 1 caractere";
 
 const formSchema = z.object({
   label: z.string().min(1, { message: customErrorMessage }),
-  imageUrl: z.string().min(1)
+  imageUrl: z.string().min(1, { message: "Você deve adicionar ao menos uma imagem"})
 });
 
 type BillboardFormValues = z.infer<typeof formSchema>;
@@ -79,7 +79,7 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
       setLoading(true);
       await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`)
       router.refresh();
-      router.push("/");
+      router.push(`/${params.storeId}/billboards`);
       toast.success("Destaque deletado");
 
     } catch ( error ) {
@@ -155,7 +155,6 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
           </Button>
         </form>
       </Form>
-      <Separator />
     </>
   )
 }
