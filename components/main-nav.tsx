@@ -17,17 +17,22 @@ export function MainNav ({
     {
     href: `/${params.storeId}`,
     label: 'Página Inicial',
-    active: pathname === `/${params.storeId},`
+    active: pathname === `/${params.storeId}`
     },
     {
     href: `/${params.storeId}/billboards`,
     label: 'Destaques',
-    active: pathname === `/${params.storeId}/billboards,`
+    active: pathname === `/${params.storeId}/billboards`
+    },
+    {
+    href: `/${params.storeId}/categories`,
+    label: 'Categorias',
+    active: pathname === `/${params.storeId}/categories`
     },
     {
     href: `/${params.storeId}/settings`,
     label: 'Configurações',
-    active: pathname === `/${params.storeId}/settings,`
+    active: pathname === `/${params.storeId}/settings`
     },
   ];
   
@@ -39,7 +44,7 @@ export function MainNav ({
           href={route.href}
           className={cn(
             "text-sm font-medium transition-colors hover:text-primary",
-            route.active ? "text-black dark:text-white" : "text-muted-foreground" // Correção na classe condicional
+            route.active ? "text-black dark:text-white" : "text-muted-foreground"
           )}
         >
           {route.label}
